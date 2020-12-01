@@ -1,0 +1,27 @@
+---
+- hosts: all
+  gather_facts: true
+  become: true
+  tasks:
+    - name: welcome
+      shell: 
+        cmd: 'hostname'
+      register: test
+
+    - name: print
+      debug:
+        msg: "{{ test.stdout }}"
+
+    - name: Copy file to the HA PROXY setup
+      copy:
+        src: script/haproxy-setup.sh
+        dest: /home/vagrant/haproxy-setup.sh
+        mode: '0777'
+
+    - name: install and configure HA PROXY 
+      shell: /home/vagrant/haproxy-setup.sh
+      register:  haproxy_install_config
+
+    - name: installation log
+      debug:
+        msg: "{{ haproxy_install_config.stdout_lines }}"

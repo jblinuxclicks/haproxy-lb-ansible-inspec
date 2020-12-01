@@ -1,0 +1,23 @@
+---
+driver:
+  name: vagrant
+  provider: libvirt
+
+provisioner:
+  name: ansible_playbook
+  hosts: test-kitchen
+  require_chef_for_busser: false
+  playbook: provision/web_test.yml
+
+
+verifier:
+  name: inspec
+
+platforms:
+  - name: ubuntu1804
+    driver_plugin: vagrant
+    driver_config:
+      box: generic/ubuntu1804      
+
+suites:
+  - name: default

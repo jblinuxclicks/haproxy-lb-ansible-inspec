@@ -1,0 +1,27 @@
+---
+- hosts: all
+  gather_facts: true
+  become: true
+  tasks:
+    - name: welcome
+      shell: 
+        cmd: 'hostname'
+      register: test
+
+    - name: print
+      debug:
+        msg: "{{ test.stdout }}"
+
+    - name: Copy file to the web server
+      copy:
+        src: provision/script/web-setup.sh
+        dest: /home/vagrant/web-setup.sh
+        mode: '0777'
+
+    - name: install apache
+      shell: /home/vagrant/web-setup.sh
+      register:  apache_install
+
+    - name: installation log
+      debug:
+        msg: "{{ apache_install.stdout_lines }}"
